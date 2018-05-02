@@ -1,0 +1,14 @@
+CPPLINT = cpplint.py
+# Instructions on where to get these two scripts comes from:
+# https://github.com/wenns/sonar-cxx/wiki/Extending-the-code-analysis
+CPPLINT_SONAR = cpplint_mod.py
+CPPLINT_SONAR_XML = cpplintReport2checkstyleReport.perl
+
+cpplint:
+	-$(CPPLINT) --root=src `find $(top_srcdir)/src -name "*.cc" -o -name "*.h"`
+
+cpplint-xml:
+	-$(CPPLINT_SONAR) --root=src `find $(top_srcdir)/src -name "*.cc" -o -name "*.h"` 2> cpplint.txt
+	$(CPPLINT_SONAR_XML) cpplint.txt cpplint.xml
+
+CPPLINT_CLEANFILES = cpplint.txt cpplint.xml

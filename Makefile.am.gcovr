@@ -1,0 +1,42 @@
+GCOV = @GCOV@
+GCOVR = @GCOVR@
+
+gcovr:
+if GCOV_ENABLED
+	(cd src && $(GCOVR) --gcov-executable=$(GCOV) `readlink -f $(abs_top_builddir)` -r `readlink -f $(abs_top_srcdir)/src` --filter=`readlink -f $(abs_top_srcdir)/src | sed 's/+/\\\\+/g'`)
+else
+	@echo "Need to reconfigure with --enable-gcov"
+endif
+
+GCOVR_XML_FILE = coverage.xml
+
+gcovr-xml:
+if GCOV_ENABLED
+	(cd src && $(GCOVR) --gcov-executable=$(GCOV) `readlink -f $(abs_top_builddir)` -r `readlink -f $(abs_top_srcdir)/src` --filter=`readlink -f $(abs_top_srcdir)/src | sed 's/+/\\\\+/g'` --xml-pretty > $(abs_top_builddir)/$(GCOVR_XML_FILE))
+	sed -i "s|<source>.*</source>|<source>"`readlink -f $(abs_top_srcdir)`"</source>|" coverage.xml
+	sed -i 's/filename="/filename="src\//g' coverage.xml
+else
+	@echo "Need to reconfigure with --enable-gcov"
+endif
+
+GCOVR_HTML_FILE = coverage.html
+
+gcovr-html:
+if GCOV_ENABLED
+	(mkdir -p html && cd src && $(GCOVR) --gcov-executable=$(GCOV) `readlink -f $(abs_top_builddir)` -r `readlink -f $(abs_top_srcdir)/src` --filter=`readlink -f $(abs_top_srcdir)/src | sed 's/+/\\\\+/g'` --html -o $(abs_top_builddir)/$(GCOVR_HTML_FILE))
+else
+	@echo "Need to reconfigure with --enable-gcov"
+endif
+
+gcovr-html-detail:
+if GCOV_ENABLED
+	(mkdir -p coverage-html && cd src && $(GCOVR) --gcov-executable=$(GCOV) `readlink -f $(abs_top_builddir)` -r `readlink -f $(abs_top_srcdir)/src` --filter=`readlink -f $(abs_top_srcdir)/src | sed 's/+/\\\\+/g'` --html --html-details -o $(abs_top_builddir)/coverage-html/index.html)
+else
+	@echo "Need to reconfigure with --enable-gcov"
+endif
+
+GCOVR_CLEANFILES = $(GCOVR_XML_FILE) $(GCOVR_HTML_FILE) coverage-html
+
+gcov-clean:
+	-rm -f $(GCOVR_CLEANFILES)
+	-find . -name "*.gcda" -delete

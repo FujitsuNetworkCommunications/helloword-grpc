@@ -1,0 +1,55 @@
+#! /bin/sh
+usage_error ()
+{
+  echo "$0: $*" >&2
+  print_usage >&2
+  exit 2
+}
+
+print_usage ()
+{
+  cat <<END
+Usage:
+  gtest-driver --enable-valgrind -- COMMAND
+END
+}
+
+enable_xml=no
+while test $# -gt 0; do
+  case $1 in
+  --help) print_usage; exit $?;;
+  --enable-valgrind) enable_valgrind=yes;;
+  --enable-xml) enable_xml=yes;;
+  --) shift; break;;
+  -*) usage_error "invalid option: '$1'";;
+  esac
+  shift
+done
+
+eval last=\${$#}
+dirname=`dirname $last`
+logname=`basename $last`
+
+valgrind_cmd=""
+if [ "${enable_valgrind}x" = "yesx" ]; then
+    /bin/rm -f ${logname}-valgrind.xml
+    valgrind_cmd="valgrind --leak-check=full --track-fds=yes --gen-suppressions=all --error-exitcode=1"
+    if [ -f ${dirname}/default.supp ]; then
+      valgrind_cmd="${valgrind_cmd} --suppressions=${dirname}/default.supp"
+    fi
+    if [ -f ${dirname}/${logname}.supp ]; then
+      valgrind_cmd="${valgrind_cmd} --suppressions=${dirname}/${logname}.supp"
+    fi
+    if [ "${enable_xml}x" = "yesx" ]; then
+      /bin/rm -f ${logname}-valgrind.xml
+      valgrind_cmd="${valgrind_cmd} --xml=yes --xml-file=${logname}-valgrind.xml"
+    fi
+fi
+gtest_opt=""
+if [ "${enable_xml}x" = "yesx" ]; then
+    /bin/rm -f ${logname}-gtest.xml
+    gtest_opt="--gtest_output=xml:${logname}-gtest.xml"
+fi
+echo ${valgrind_cmd} $* ${gtest_opt}
+${valgrind_cmd} $* ${gtest_opt}
+exit $?

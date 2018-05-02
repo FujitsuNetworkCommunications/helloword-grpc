@@ -1,0 +1,20 @@
+# These targets work for both C and C++ (cpcheck bases language on file
+# extension).  cppcheck ignores header files by default and only indirectly
+# checks them when they are included by source code.
+#
+# For case of header files that contain templates or inline code and only
+# included by test code, the defaults are not good enough.  In that case,
+# set CPPCHECKFILES to list of those header files in your top level
+# Makefile.am. Also, cppcheck will incorrectly guess *.h files are C code
+# so you will need to force the language to C++ by also adding this:
+# CPPCHECKFLAGS = "--language=c++"
+
+CPPCHECK = cppcheck
+
+cppcheck:
+	$(CPPCHECK) --enable=warning,style,unusedFunction --template=gcc $(CPPCHECKFLAGS) $(AM_CPPFLAGS) $(srcdir)/src $(CPPCHECKFILES)
+
+cppcheck-xml:
+	$(CPPCHECK) --enable=warning,style,unusedFunction $(AM_CPPFLAGS) $(CPPCHECKFLAGS) --xml-version=2 --xml $(srcdir)/src $(CPPCHECKFILES) 2> cppcheck.xml
+
+CPPCHECK_CLEANFILES = cppcheck.xml

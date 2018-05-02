@@ -1,0 +1,34 @@
+# Compiled object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so*
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Compiled executables
+test-suite.log
+
+helloworld_unittest
+helloworld_unittest.log
+helloworld_unittest.trs
+helloworld_unittest.xml
+helloworld_unittest-gtest.xml
+helloworld_unittest-valgrind.xml
+
+# Autotools issues
+.deps
+.libs
+.dirstamp
+
+# Code Coverage
+*.gcno
+*.gcda
+*.gcov
+

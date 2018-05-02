@@ -1,0 +1,35 @@
+# Autotools issues
+a.exe
+aclocal.m4
+autom4te.cache
+compile
+config.log
+config.guess
+config.status
+config.sub
+configure
+depcomp
+install-sh
+libtool
+ltmain.sh
+Makefile
+Makefile.in
+missing
+test-driver
+
+# Build directory
+build
+
+# Distribution files
+*.tar*
+*.zip
+
+# Static Analysis
+cppcheck.xml
+cpplint.txt
+cpplint.xml
+flint.xml
+flint-gcc
+
+# Unit Test
+coverage.xml

@@ -1,0 +1,33 @@
+# Compiled object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so*
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Compiled executables
+greeter_server
+greeter_client
+
+# Generated files
+*.grpc.pb.cc
+*.grpc.pb.h
+*.pb.cc
+*.pb.h
+
+# Autotools issues
+.deps
+.libs
+.dirstamp
+
+# Code Coverage
+*.gcda
+*.gcno
+*.gcov
